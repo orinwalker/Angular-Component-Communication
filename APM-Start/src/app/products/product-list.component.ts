@@ -19,32 +19,32 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     // @ViewChildren(NgModel) inputElementRefs: QueryList<ElementRef>;
 
     @ViewChild('filterElement') filterElementRef: ElementRef;
-    // @ViewChild(NgModel) filterInput: NgModel;
+    @ViewChild(NgModel) filterInput: NgModel;
 
-    private _filterInput: NgModel;
-    private _sub: Subscription;
+    // private _filterInput: NgModel;
+    // private _sub: Subscription;
 
-    get filterInput(): NgModel {
-      return this._filterInput;
-    }
+    // get filterInput(): NgModel {
+    //   return this._filterInput;
+    // }
 
-    @ViewChild(NgModel)
-    set filterInput(value: NgModel) {
-      this._filterInput = value;
-      console.log(this.filterElementRef);
-      if (this.filterInput && !this._sub) {
-        this._sub = this.filterInput.valueChanges.subscribe(
-          () => {
-            this.performFilter(this.listFilter);
-            console.log('performed the filter');
-            }
-          );
-      }
+    // @ViewChild(NgModel)
+    // set filterInput(value: NgModel) {
+    //   this._filterInput = value;
+    //   console.log(this.filterElementRef);
+    //   if (this.filterInput && !this._sub) {
+    //     this._sub = this.filterInput.valueChanges.subscribe(
+    //       () => {
+    //         this.performFilter(this.listFilter);
+    //         console.log('performed the filter');
+    //         }
+    //       );
+    //   }
 
-      if (this.filterElementRef) {
-          this.filterElementRef.nativeElement.focus();
-        }
-      }
+    //   if (this.filterElementRef) {
+    //       this.filterElementRef.nativeElement.focus();
+    //     }
+    //   }
 
     showImage: boolean;
 
