@@ -5,38 +5,26 @@
 
     <div class='panel-body'>
         <!-- Filter by the Title   -->
+        <!-- <input type='text' [(ngModel)]='listFilter' /> -->
+        <!-- Use property binding to bind the ngModel directive to the the components listFilter property -->
+        <!-- This sets any default value from the component -->
+        <!-- Takes what is in the component and displays it in the box - i.e. component to template -->
+        <!-- <input type='text'
+                          [ngModel]='userEnteredFilter'
+                          (ngModelChange)='onFilterChange($event)'
+                          /> -->
+        <!-- Then we have a change event that gets fired each time that I type into the box that calls the
+             onFilterChange event and this sends what I type into the box to the component -->
+        <!-- Use event binding to bind the ngModel change event. Call a method in the compoent class  -->
+        <!-- Pass in $event to the method to provide the changed value -->
 
-         <!-- <input type='text' [(ngModel)]='listFilter' /> -->
-
-                <!-- Use property binding to bind the ngModel directive to the the components listFilter property -->
-                <!-- This sets any default value from the component -->
-
-                <!-- Takes what is in the component and displays it in the box - i.e. component to template -->
-                <!-- <input type='text'
-                  [ngModel]='userEnteredFilter'
-                  (ngModelChange)='onFilterChange($event)'
-                  /> -->
-
-                    <!-- Then we have a change event that gets fired each time that I type into the box that calls the
-                  onFilterChange event and this sends what I type into the box to the component -->
-
-
-                <!-- Use event binding to bind the ngModel change event. Call a method in the compoent class  -->
-                <!-- Pass in $event to the method to provide the changed value -->
-
-
-
-        <div class='row'>
+        <div class='row' *ngIf='products'>
+          <!-- <div class='row'> -->
             <div class='col-md-2'>Filter by:</div>
             <div class='col-md-4'>
-                  <input #filterElement [(ngModel)]='listFilter' type="text">
+                  <input type="text" #filterElement
+                         [(ngModel)]='listFilter' />
             </div>
-            <!-- <div class='col-md-2'>Filter by:</div>
-            <div class='col-md-4'>
-                  <input #filterElement [(ngModel)]='listFilter' type="text">
-            </div> -->
-
-
           </div>
         <div class='row' [hidden]='!listFilter'>
             <div class='col-md-10'>

@@ -4,6 +4,7 @@ import { IProduct } from './product';
 import { ProductService } from './product.service';
 import { QueryList } from '@angular/core';
 import { NgModel } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     templateUrl: './product-list.component.html',
@@ -11,21 +12,39 @@ import { NgModel } from '@angular/forms';
 })
 export class ProductListComponent implements OnInit, AfterViewInit {
     pageTitle: string = 'Product List';
-    // listFilter: string;
+    listFilter: string;
 
-    private _listFilter: string;
-
-    @ViewChild('filterElement') filterElementRef;
+    // @ViewChild(NgModel) filterInput: NgModel;
     // @ViewChildren('filterElement, nameElement') inputElementRefs: QueryList<ElementRef>;
     // @ViewChildren(NgModel) inputElementRefs: QueryList<ElementRef>;
 
-    get listFilter(): string {
-      return this._listFilter;
+    @ViewChild('filterElement') filterElementRef: ElementRef;
+    // @ViewChild(NgModel) filterInput: NgModel;
+
+    private _filterInput: NgModel;
+    private _sub: Subscription;
+
+    get filterInput(): NgModel {
+      return this._filterInput;
     }
-    set listFilter(value: string) {
-      this._listFilter = value;
-      this.performFilter(this._listFilter);
-    }
+
+    @ViewChild(NgModel)
+    set filterInput(value: NgModel) {
+      this._filterInput = value;
+      console.log(this.filterElementRef);
+      if (this.filterInput && !this._sub) {
+        this._sub = this.filterInput.valueChanges.subscribe(
+          () => {
+            this.performFilter(this.listFilter);
+            console.log('performed the filter');
+            }
+          );
+      }
+
+      if (this.filterElementRef) {
+          this.filterElementRef.nativeElement.focus();
+        }
+      }
 
     showImage: boolean;
 
@@ -42,7 +61,9 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
       this.filterElementRef.nativeElement.focus();
-      // console.log(this.inputElementRefs);
+      this.filterInput.valueChanges.subscribe(() => {
+        this.performFilter(this.listFilter);
+      });
     }
 
     ngOnInit(): void {
