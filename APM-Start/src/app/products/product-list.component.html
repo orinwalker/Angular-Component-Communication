@@ -6,8 +6,10 @@
   <div class='panel-body'>
 
     <div class='row'>
-      <pm-criteria #childFilterCriteria class='col-md-10' [displayDetail]='includeDetail'
-        [hitCount]='filteredProducts?.length' (changeFilter)='handleFilterChange($event)'>
+      <pm-criteria #childFilterCriteria class='col-md-10'
+        [displayDetail]='includeDetail'
+        [hitCount]='filteredProducts?.length'
+        (changeFilter)='handleFilterChange($event)'>
       </pm-criteria>
     </div>
 

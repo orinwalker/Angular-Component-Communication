@@ -2,41 +2,54 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IProduct } from './product';
 import { ProductService } from './product.service';
 import { CriteriaComponent } from '../shared/criteria/criteria.component';
+import { ProductParameterService } from './product-parameter.service';
 
 @Component({
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements AfterViewInit {
+export class ProductListComponent implements AfterViewInit, OnInit {
 
-    @ViewChild(CriteriaComponent) childFilterComponent: CriteriaComponent;
+    @ViewChild(CriteriaComponent) filterComponent: CriteriaComponent;
 
     listFilter: string;
     errorMessage: string;
     pageTitle: string = 'Product List';
     includeDetail: boolean = true;
-    showImage: boolean = true;
+
     imageWidth: number = 50;
     imageMargin: number = 2;
     filteredProducts: IProduct[];
     products: IProduct[];
 
-    constructor(private productService: ProductService) {
+    get showImage(): boolean {
+      return this.productParameterService.showImage;
+    }
+    set showImage(value: boolean) {
+      this.productParameterService.showImage = value;
+    }
+
+    constructor(private productService: ProductService,
+      private productParameterService: ProductParameterService) {
     }
 
     ngAfterViewInit(): void {
-        this.listFilter = this.childFilterComponent.listFilter;
-        this.productService.getProducts().subscribe(
-          (products: IProduct[]) => {
-              this.products = products;
-              this.performFilter(this.listFilter);
-          },
-          (error: any) =>  this.errorMessage  = <any>error
-      );
+        this.listFilter = this.filterComponent.listFilter;
     }
 
-    handleFilterChange(listFilter: string) {
-      this.performFilter(listFilter);
+    ngOnInit() {
+      this.productService.getProducts().subscribe(
+        (products: IProduct[]) => {
+            this.products = products;
+            this.filterComponent.listFilter = this.productParameterService.filterBy;
+        },
+        (error: any) =>  this.errorMessage  = <any>error
+    );
+    }
+
+    handleFilterChange(value: string) {
+      this.productParameterService.filterBy = value;
+      this.performFilter(value);
     }
 
     toggleImage(): void {
