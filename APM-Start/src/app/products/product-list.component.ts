@@ -1,68 +1,84 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, ViewChildren } from '@angular/core';
-
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { IProduct } from './product';
 import { ProductService } from './product.service';
-import { QueryList } from '@angular/core';
-import { NgModel } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
+import { CriteriaComponent } from '../shared/criteria/criteria.component';
 
 @Component({
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit, AfterViewInit {
+
+    @ViewChild(CriteriaComponent) childFilterComponent: CriteriaComponent;
+
     pageTitle: string = 'Product List';
-    listFilter: string;
-
-    @ViewChild('filterElement') filterElementRef: ElementRef;
-    @ViewChild(NgModel) filterInput: NgModel;
-
-    showImage: boolean;
+    parentListFilter: string;
+    parentIncludeDetailBoolean: boolean = true;
+    showImage: boolean = true;
 
     imageWidth: number = 50;
     imageMargin: number = 2;
     errorMessage: string;
 
-    filteredProducts: IProduct[];
+    parentFilteredProducts: IProduct[];
     products: IProduct[];
 
     constructor(private productService: ProductService) {
-      // console.log(this.filterElementRef);
+      // this.parentListFilter = 'cart';
     }
 
-    ngAfterViewInit() {
-      this.filterElementRef.nativeElement.focus();
-      this.filterInput.valueChanges.subscribe(() => {
-        this.performFilter(this.listFilter);
-      });
+    ngAfterViewInit(): void {
+      // this.parentListFilter = 'cart';
+
+        this.parentListFilter = this.childFilterComponent.childListFilter;
+        // console.log('inside ngAfterViewInit [' + this.parentListFilter + ']');
+        // console.log('this.childFilterComponent is: ' + JSON.stringify(this.childFilterComponent));
+        this.productService.getProducts().subscribe(
+          (products: IProduct[]) => {
+              // Even though this does not log out, it is working
+              // console.log('calling filter parentListFilter [' + this.parentListFilter + ']');
+              this.products = products;
+              // this.performFilter(this.parentListFilter);
+              // here I can affect change but not if I set it through a parameter??
+              this.performFilter(this.parentListFilter);
+          },
+          (error: any) =>  this.errorMessage  = <any>error
+      );
+      // console.log ('errorMessage: ' + this.errorMessage);
     }
 
     ngOnInit(): void {
-        this.productService.getProducts().subscribe(
-            (products: IProduct[]) => {
-                this.products = products;
-                this.performFilter(this.listFilter);
-            },
-            (error: any) => this.errorMessage = <any>error
-        );
+      // this.parentListFilter = 'cart';
+      // console.log('ngOnInit: parentListFilter: ' + this.parentListFilter);
+      //   this.productService.getProducts().subscribe(
+      //       (products: IProduct[]) => {
+      //           console.log('calling filter parentListFilter ' + this.parentListFilter);
+      //           this.products = products;
+      //           // this.performFilter(this.parentListFilter);
+      //           this.performFilter(this.orinString);
+      //       },
+      //       (error: any) => this.errorMessage = <any>error
+      //   );
     }
 
-    // the input string is the element value from the template
-    // onFilterChange(filter: string): void {
-    //   this.listFilter = filter; // now set the local property
-    //   this.performFilter(this.listFilter);
-    // }
+    handleFilterStatusChange(childListFilter: string) {
+      console.log('handleFilterStatusChange called with ' + childListFilter);
+      this.performFilter(childListFilter);
+    }
 
     toggleImage(): void {
         this.showImage = !this.showImage;
     }
 
     performFilter(filterBy?: string): void {
+
         if (filterBy) {
-            this.filteredProducts = this.products.filter((product: IProduct) =>
+          console.log('filterBy is set, performFilter - filterBy [' + filterBy + ']');
+            this.parentFilteredProducts = this.products.filter((product: IProduct) =>
                 product.productName.toLocaleLowerCase().indexOf(filterBy.toLocaleLowerCase()) !== -1);
         } else {
-            this.filteredProducts = this.products;
+          console.log('filterBy is NOT set, performFilter - filterBy [' + filterBy + ']');
+            this.parentFilteredProducts = this.products;
         }
     }
 }

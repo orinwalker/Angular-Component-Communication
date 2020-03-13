@@ -17,10 +17,12 @@ export class ProductService {
 
     getProducts(): Observable<IProduct[]> {
         return this.http.get<IProduct[]>(this.productsUrl)
-                        .pipe(
-                            tap(data => console.log(JSON.stringify(data))),
-                            catchError(this.handleError)
-                        );
+        .pipe(
+          tap(data => {
+            // console.log('Data: ' + JSON.stringify(data))
+        }),
+          catchError(this.handleError)
+      );
     }
 
     getProduct(id: number): Observable<IProduct> {
@@ -30,7 +32,9 @@ export class ProductService {
         const url = `${this.productsUrl}/${id}`;
         return this.http.get<IProduct>(url)
                         .pipe(
-                            tap(data => console.log('Data: ' + JSON.stringify(data))),
+                            tap(data => {
+                              // console.log('Data: ' + JSON.stringify(data))
+                          }),
                             catchError(this.handleError)
                         );
     }
@@ -49,7 +53,7 @@ export class ProductService {
         const url = `${this.productsUrl}/${id}`;
         return this.http.delete<IProduct>(url, { headers: headers} )
                         .pipe(
-                            tap(data => console.log('deleteProduct: ' + id)),
+                            tap( data => console.log('deleteProduct: ' + id)),
                             catchError(this.handleError)
                         );
     }
