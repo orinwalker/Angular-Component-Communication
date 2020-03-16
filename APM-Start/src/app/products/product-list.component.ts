@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { IProduct } from './product';
 import { ProductService } from './product.service';
 import { CriteriaComponent } from '../shared/criteria/criteria.component';
