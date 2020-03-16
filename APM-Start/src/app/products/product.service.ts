@@ -9,6 +9,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { IProduct } from './product';
 import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 
 @Injectable()
@@ -17,7 +18,7 @@ export class ProductService {
   private products: IProduct[];
   // currentProduct: IProduct | null;
 
-  private selectedProductSource = new Subject<IProduct | null>();
+  private selectedProductSource = new BehaviorSubject<IProduct | null>(null);
 
   selectedProductChanges$ = this.selectedProductSource.asObservable();
 
@@ -78,9 +79,10 @@ export class ProductService {
           const foundIndex = this.products.findIndex(item => item.id === id);
           if (foundIndex > -1) {
             // Removes the product found at this index
-            return this.products.splice(foundIndex, 1);
+            const foundProduct = this.products.splice(foundIndex, 1);
             // this.currentProduct = null;
             this.changeSelectedProduct(null);
+            return foundProduct;
           }
         }),
         catchError(this.handleError)
