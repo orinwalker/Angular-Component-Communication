@@ -23,4 +23,11 @@ export class ProductShellListComponent implements OnInit {
     );
   }
 
+  onSelected(product: IProduct) {
+    // when the user select the product from the list...
+    // set it in the service so that when the detail component retrieves it
+    // the current project can be reflected
+    this.productService.currentProduct = product;
+  }
+
 }
